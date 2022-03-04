@@ -8,10 +8,13 @@ def main():
     OknoGry=pygame.display.set_mode((440,440),0,32)
     pygame.display.set_caption("3tieg")
     run=True
+    iloscJablek=3
     #wywołanie klasy waz
     obiektWaz=waz.Waz()
-    
-    obiektJablok=jablko.Jablko()
+    #tworzenie kilku jablek
+    obiektJablok=[]
+    for  nrJablko in range(0,iloscJablek):
+        obiektJablok.append(jablko.Jablko())
     
     #losowanie pozycji jabłka
     appleX=random.randint(0,21)*20+10
@@ -19,7 +22,10 @@ def main():
     
     while(run):
         OknoGry.fill((0,0,0))
-        obiektJablok.rysujJablko(OknoGry)
+
+        for obiektApple in obiektJablok[: :]:
+            obiektApple.rysujJablko(OknoGry)    
+        #obiektJablok.rysujJablko(OknoGry)
         pygame.time.delay(200)
         #obsługa ruchu weża obiektu obiket waz
         for zdarzenie in pygame.event.get():
@@ -39,16 +45,19 @@ def main():
         obiektWaz.rysowanie(OknoGry)
         
         #tworzenie jablka za pomoca kola
-        pygame.draw.circle(OknoGry,(128,0,0),(appleX,appleY),10)
+        #pygame.draw.circle(OknoGry,(128,0,0),(appleX,appleY),10)
         
         #sprawdzenie czy waz zjada jablko
         poz=obiektWaz.getPosition()
-        if (poz[1]+10==appleY and poz[0]+10==appleX):
-            obiektWaz.zjadanie()
+        for obiektApple in obiektJablok[::]:
+            pozJablko=obiektApple.getPozycja()
+            if (poz[1]+10==pozJablko[1] and poz[0]+10==pozJablko[0]):
+                obiektWaz.zjadanie()
             #wylosowanie nowej pozycji jablka
-            appleX=random.randint(0,21)*20+10
-            appleY=random.randint(0,21)*20+10
-            pygame.draw.circle(OknoGry,(128,128,128),(appleX,appleY),10)
+                obiektApple.losujPozycje()
+            #appleX=random.randint(0,21)*20+10
+            #appleY=random.randint(0,21)*20+10
+            #pygame.draw.circle(OknoGry,(128,128,128),(appleX,appleY),10)
             
         #wypisanie punktow na ekran
         czcionka=pygame.font.SysFont('comicsans',30)
