@@ -1,68 +1,54 @@
 import pygame
-import lekcja1
 
-class Waz():
+
+class Snake():
     #konstruktor klasy
-    #tworzy podstawowe elementy klast podczas wywolania jej
     def __init__(self):
-        self.__pozycja=[(100,100)]
-        self.dlugoscWeza=1
+        self.dlugosc=1
         self.punkty=0
-        self.kierunek=(0,-1)
-        self.kolor=(0,255,0)
-    def getPosition(self):
-        return self.__pozycja[-1]
-    def setPosition(self,x,y):
-        self.__pozycja[-1]=(x,y)
-    def setKierunek(self,direction):
-            self.kierunek=direction
-    def ruch(self):
-        #obliczanie nowej pozycji
-        ostatniaPozycja=self.__pozycja[-1]
-        x=ostatniaPozycja[0]+20*self.kierunek[0]
-        y=ostatniaPozycja[1]+20*self.kierunek[1]
-         #sprawdzenie czy waz nie zjada siebie
-        for location in self.__pozycja [::]:
-             if x==location[0] and y==location[1]:
-                    self.__pozycja=[(x,y)]
-                    self.dlugoscWeza=1
-                    self.punkty=0
-        #sprawdzenie czy waz nie wyszedł za krawędzie
-        noweWspl=self.sprawdzKrawedz(x,y)
-        #dodanie nowej pozycji weza
-        self.__pozycja.append(noweWspl)
-        #nie usuwamy pozycji gdy waz zjadl jablko
-        if len(self.__pozycja)>self.dlugoscWeza:   
-            del self.__pozycja[0]
-        #funkcja zjadania jablka
-    def zjadanie(self):
-        #self.dlugoscWeza=self.dlugoscWeza+1
-        self.dlugoscWeza+=1
+        self.pozycje=[(120,120)]
+        self.kierunek=(0,1)
+    def setDirection(self,kier):
+        self.kierunek=kier
+    #pobranie pozycji głowy
+    def getHead(self):
+        return self.pozycje[-1]
+    def eating(self):
+        self.dlugosc+=1
         self.punkty+=1
-    #funkcja rysujaca weza
-    #jako parametry wywolania uzywa self - samej siebie oraz OknoGry- tam gdzie bedziemy rysowac weza
-    def rysowanie(self, OknoGry):
-        #rysowanie weza z pozycji
-         for poz in self.__pozycja[::-1]:
-            r=pygame.Rect((poz[0],poz[1]),(20,20))
-            pygame.draw.rect(OknoGry,self.kolor,r)
-    #czy ktos zjadl waz
-    def czyKtosMnieUgryzl(self,pozycja):
-        for czesciCiala in self.__pozycja[::]:
-            if pozycja[0]==czesciCiala[0] and pozycja[1]==czesciCiala[1]:
-                self.__pozycja=[(pozycja[0],pozycja[1])]
-                self.dlugoscWeza=1
+    def drawSnake(self,OknoGry):
+         for wspolrzendne in self.pozycje[::-1]: 
+            wazShape=pygame.Rect((wspolrzendne[0],wspolrzendne[1]),(40,40))
+            pygame.draw.rect(OknoGry,(255,192,203),wazShape)
+    def snakeMove(self):
+        #ostatnia pozycja weza
+        ostatniaPozycja=self.pozycje[-1]
+        #nowe pozycje
+        x=ostatniaPozycja[0]+40*self.kierunek[0]
+        y=ostatniaPozycja[1]+40*self.kierunek[1]
+        #sprawdzenie przejścia krawędzi
+        noweWspl=self.checkBorder(x,y)
+         #sprawdzenie czy wąż sam siebie nie zjadł
+        for wspol in self.pozycje[::]:
+            if noweWspl[0]==wspol[0] and noweWspl[1]==wspol[1]:
+                self.pozycje=[]
+                self.dlugosc=1
                 self.punkty=0
-    def ustawKolor(self,nowyKolor):
-        self.kolor=nowyKolor
-        #sprawdzenie krawędzi
-    def sprawdzKrawedz(self, x,y):
-        if x>lekcja1.rozdzielczosc:
-            x=0
-        if x<0:
-            x=lekcja1.rozdzielczosc
-        if y>lekcja1.rozdzielczosc:
-            y=0
-        if y<0:
-            y=lekcja1.rozdzielczosc
-        return (x,y)
+        #dodanie nowej pozycji weza
+        self.pozycje.append((noweWspl[0],noweWspl[1]))
+        if self.dlugosc<len(self.pozycje):
+            del self.pozycje[0]
+    #sprawdzenie krawędzi
+    def checkBorder(self,zmienna1,zmienna2):
+        if zmienna1>=400:
+            zmienna1=0
+            #przejście dół
+        if zmienna2>=400:
+            zmienna2=0
+        #przejście strona lewa
+        if zmienna1<0:
+            zmienna1=400
+            #przejście góra
+        if zmienna2<0:
+            zmienna2=400
+        return (zmienna1,zmienna2)   
