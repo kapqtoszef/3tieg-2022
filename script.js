@@ -1,22 +1,24 @@
 //losowanie liczby
-var wylosowanaLiczba=Math.floor(Math.random()*100)+1;
+var wylosowanaliczba=Math.floor(Math.random()*100)+1;
 //wyswietlanie liczby
-function wyborliczby(){
+function wyborLiczby(){
     var ilosc=document.getElementById("zakres").value;
-    document.getElementById("wybranaliczba").value=ilosc;
-     wylosowanaLiczba=Math.floor(Math.random()*ilosc)+1;
-    iloscProb=0
+    document.getElementById("wybranaLiczba").value=ilosc;
+    wylosowanaliczba=Math.floor(Math.random()*ilosc)+1;
+    iloscprob=0
 }
-//liczba prob
-var iloscProb=0
+//liczba prób
+var iloscprob=0
 function sprawdzLiczbe(){
-    iloscProb++;
+    iloscprob++;
     dane=document.getElementById('liczba')
-    if(dane.value == wylosowanaLiczba){
-        alert("Wygrałeś ihona max pro wow!!!!!!!! "+iloscProb)
-    }else if(dane.value<wylosowanaLiczba){
-        alert("fest maala liczba ")
-    }else{
-        alert("masna liczba ")
+    if(dane.value==wylosowanaliczba){
+        alert("Wygrałeś. Ilość prób to: "+iloscprob)
+    }
+    else if(dane.value<wylosowanaliczba){
+        alert("Za mała liczba")
+    }
+    else{
+        alert("Za duża liczba")
     }
 }
